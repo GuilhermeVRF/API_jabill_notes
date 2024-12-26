@@ -31,7 +31,7 @@ func (pageService *PageService) Update (field string, value string, slug string,
 	return pageService.pageRepository.Update(field, value, slug, user_id)
 }
 
-func (pageService *PageService) UpdateTitle (title string, slug string, user_id int) (error){
+func (pageService *PageService) UpdateTitle (title string, slug string, user_id int) (string, string, error){
 	return pageService.pageRepository.UpdateTitle(title, slug, user_id)
 }
 

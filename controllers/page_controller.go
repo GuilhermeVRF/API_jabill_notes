@@ -121,13 +121,13 @@ func (pageController *PageController) UpdateTitle (context *gin.Context){
 		return	
 	}
 
-	err = pageController.pageService.UpdateTitle(titleRequest.Title, slug, user.Id)
+	title, slug, err := pageController.pageService.UpdateTitle(titleRequest.Title, slug, user.Id)
 	if err != nil{
 		context.JSON(http.StatusInternalServerError, utils.NewApiResponse("error", err.Error(), nil))
 		return	
 	}
 
-	context.JSON(http.StatusOK, utils.NewApiResponse("success", "Título atualizado com sucesso!", true))
+	context.JSON(http.StatusOK, utils.NewApiResponse("success", "Título atualizado com sucesso!", gin.H{"title": title, "slug": slug}))
 }
 
 func (pageController *PageController) UpdateContent(context *gin.Context){

@@ -90,11 +90,11 @@ func (pageRepository *PageRepository) Update (field string, title string, slug s
 	return nil
 }
 
-func (pageRepository *PageRepository) UpdateTitle(title string, actualSlug string, user_id int) (error){
+func (pageRepository *PageRepository) UpdateTitle(title string, actualSlug string, user_id int) (string, string, error){
 	newSlug, err := pageRepository.checkIfSlugExists(slug.Make(title))
 
 	if err != nil{
-		return errors.New("Não foi possível gerar o novo slug para a página!")
+		return "", "", errors.New("Não foi possível gerar o novo slug para a página!")
 	}
 
 	titleQuery := "UPDATE Page SET title = ?, slug = ? WHERE slug = ? AND user_id = ?"
@@ -102,10 +102,10 @@ func (pageRepository *PageRepository) UpdateTitle(title string, actualSlug strin
 	_, err = pageRepository.databaseConnection.Exec(titleQuery, title, newSlug, actualSlug, user_id)
 
 	if err != nil{
-		return err
+		return "", "", err
 	}
 
-	return nil
+	return title, newSlug, nil
 }
 
 func (pageRepository *PageRepository) UpdateContent (content string, slug string, user_id int) (error){
