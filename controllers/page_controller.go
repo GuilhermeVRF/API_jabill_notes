@@ -97,6 +97,32 @@ func (pageController *PageController) Store(context *gin.Context){
 	context.JSON(http.StatusOK, utils.NewApiResponse("success", "Página criada com sucesso", page))
 }
 
+func (pageController *PageController) Delete(context *gin.Context){
+	slug := context.Param("slug")
+
+	if slug == ""{
+		context.JSON(http.StatusBadRequest, utils.NewApiResponse("error", "Slug não foi encontrado!", nil))
+	}
+	
+	authorizationHeader := context.GetHeader("Authorization")
+
+	user, err := auth.ParseToken(authorizationHeader)
+
+	if err != nil{
+		context.JSON(http.StatusUnauthorized, utils.NewApiResponse("error", "Usuário não autenticado!", nil))
+		return 
+	}
+
+	err = pageController.pageService.Delete(slug, user.Id)
+
+	if err != nil{
+		context.JSON(http.StatusInternalServerError, utils.NewApiResponse("error", err.Error(), nil))
+		return	
+	}
+
+	context.JSON(http.StatusOK, utils.NewApiResponse("success", "Página deletada com sucesso!", nil))
+}
+
 func (pageController *PageController) UpdateTitle (context *gin.Context){
 	slug := context.Param("slug")
 

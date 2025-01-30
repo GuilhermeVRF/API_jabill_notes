@@ -59,6 +59,7 @@ func main() {
 	server.POST("/page", PageController.Store)
 	server.PUT("/page/content/:slug", PageController.UpdateContent)
 	server.PUT("/page/title/:slug", PageController.UpdateTitle)
-	
+	server.DELETE("/page/:slug", PageController.Delete)
+
 	server.Run(":5000")
 }

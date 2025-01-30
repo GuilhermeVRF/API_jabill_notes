@@ -36,24 +36,24 @@ func (pageRepository *PageRepository) Show(slug string, user_id int) (models.Pag
 	return page, nil
 }
 
-func (pageRepository *PageRepository) Index (user_id int) ([]models.Page, error){
+func (pageRepository *PageRepository) Index (user_id int) (map[string]models.Page, error){
 	pagesQuery := "SELECT id, emoji, title, slug FROM Page WHERE user_id = ?"
 	pagesResults, err := pageRepository.databaseConnection.Query(pagesQuery, user_id)
 
 	if err != nil{
-		return []models.Page{}, err
+		return map[string]models.Page{}, err
 	}
 
-	var pages []models.Page
+	pages := make(map[string]models.Page)
 	var page models.Page
 	for pagesResults.Next(){
 		err = pagesResults.Scan(&page.Id, &page.Emoji, &page.Title, &page.Slug)
 
 		if err != nil{
-			return []models.Page{}, err
+			return map[string]models.Page{}, err
 		}
 
-		pages = append(pages, page)
+		pages[page.Slug] = page
 	}
 
 	pagesResults.Close()
@@ -82,6 +82,18 @@ func (pageRepository *PageRepository) Update (field string, title string, slug s
 	titleQuery := "UPDATE Page SET "+ field +" = ? WHERE slug = ? AND user_id = ?"
 
 	_, err := pageRepository.databaseConnection.Exec(titleQuery, title, slug, user_id)
+
+	if err != nil{
+		return err
+	}
+
+	return nil
+}
+
+func (pageRepository *PageRepository) Delete(slug string, user_id int) (error){
+	deleteQuery := "DELETE FROM Page WHERE slug = ? AND user_id = ?"
+
+	_, err := pageRepository.databaseConnection.Exec(deleteQuery, slug, user_id)
 
 	if err != nil{
 		return err

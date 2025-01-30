@@ -19,7 +19,7 @@ func (pageService *PageService) Show (slug string, user_id int) (models.Page, er
 	return pageService.pageRepository.Show(slug, user_id)
 }
 
-func (pageService *PageService) Index (user_id int) ([]models.Page, error){
+func (pageService *PageService) Index (user_id int) (map[string]models.Page, error){
 	return pageService.pageRepository.Index(user_id)
 }
 
@@ -29,6 +29,10 @@ func (pageService *PageService) Store (page models.Page) (models.Page, error){
 
 func (pageService *PageService) Update (field string, value string, slug string, user_id int) (error){
 	return pageService.pageRepository.Update(field, value, slug, user_id)
+}
+
+func (pageService *PageService) Delete(slug string, user_id int) (error){
+	return pageService.pageRepository.Delete(slug, user_id)
 }
 
 func (pageService *PageService) UpdateTitle (title string, slug string, user_id int) (string, string, error){
