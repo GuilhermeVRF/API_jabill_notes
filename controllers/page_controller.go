@@ -156,6 +156,39 @@ func (pageController *PageController) UpdateTitle (context *gin.Context){
 	context.JSON(http.StatusOK, utils.NewApiResponse("success", "Título atualizado com sucesso!", gin.H{"title": title, "slug": slug}))
 }
 
+func (pageController *PageController) UpdateEmoji (context *gin.Context){
+	slug := context.Param("slug")
+
+	if slug == ""{
+		context.JSON(http.StatusBadRequest, utils.NewApiResponse("error", "Slug não foi encontrado!", nil))
+	}
+
+	authorizationHeader := context.GetHeader("Authorization")
+
+	user, err := auth.ParseToken(authorizationHeader)
+
+	if err != nil{
+		context.JSON(http.StatusUnauthorized, utils.NewApiResponse("error", "Usuário não autenticado!", nil))
+		return 
+	}
+
+	var emojiRequest requests.EmojiRequest
+	err = context.ShouldBindJSON(&emojiRequest)
+
+	if err != nil{
+		context.JSON(http.StatusBadRequest, utils.NewApiResponse("error", err.Error(), nil))
+		return	
+	}
+
+	emoji, err := pageController.pageService.UpdateEmoji(emojiRequest.Emoji, slug, user.Id)
+	if err != nil{
+		context.JSON(http.StatusInternalServerError, utils.NewApiResponse("error", err.Error(), nil))
+		return	
+	}
+
+	context.JSON(http.StatusOK, utils.NewApiResponse("success", "Emoji atualizado com sucesso!", gin.H{"emoji": emoji, "slug": slug}))
+}
+
 func (pageController *PageController) UpdateContent(context *gin.Context){
 	slug := context.Param("slug")
 

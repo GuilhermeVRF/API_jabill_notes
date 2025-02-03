@@ -39,6 +39,10 @@ func (pageService *PageService) UpdateTitle (title string, slug string, user_id 
 	return pageService.pageRepository.UpdateTitle(title, slug, user_id)
 }
 
+func (pageService *PageService) UpdateEmoji (emoji string, slug string, user_id int) (string, error){
+	return pageService.pageRepository.UpdateEmoji(emoji, slug, user_id)
+}
+
 func (pageService *PageService) UpdateContent (content string, slug string, user_id int) (error){
 	return pageService.pageRepository.UpdateContent(content, slug, user_id)
 }

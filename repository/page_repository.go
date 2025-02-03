@@ -68,8 +68,8 @@ func (pageRepository *PageRepository) Store (page models.Page) (models.Page, err
 		return models.Page{}, err
 	}
 
-	pageQuery := "INSERT INTO Page (title, slug, parent_id, content, user_id) VALUES (?, ?, ?, ?, ?)"
-	_, err = pageRepository.databaseConnection.Exec(pageQuery, page.Title, page.Slug, nil, "", page.User_id)
+	pageQuery := "INSERT INTO Page (title, slug, emoji, parent_id, content, user_id) VALUES (?, ?, ?, ?, ?, ?)"
+	_, err = pageRepository.databaseConnection.Exec(pageQuery, page.Title, page.Slug, "📃", nil, "", page.User_id)
 
 	if err != nil{
 		return models.Page{}, err
@@ -100,6 +100,18 @@ func (pageRepository *PageRepository) Delete(slug string, user_id int) (error){
 	}
 
 	return nil
+}
+
+func (pageRepository *PageRepository) UpdateEmoji(emoji string, actualSlug string, user_id int) (string, error){
+	emojiQuery := "UPDATE Page SET emoji = ? WHERE slug = ? AND user_id = ?"
+
+	_, err := pageRepository.databaseConnection.Exec(emojiQuery, emoji, actualSlug, user_id)
+
+	if err != nil{
+		return "", err
+	}
+
+	return emoji, nil
 }
 
 func (pageRepository *PageRepository) UpdateTitle(title string, actualSlug string, user_id int) (string, string, error){
