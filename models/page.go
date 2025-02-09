@@ -6,6 +6,7 @@ type Page struct{
 	Cape string `json:"cape"`
 	Emoji string `json:"emoji"`
 	Parent_id interface{} `json:"parent_id"`
+	Depth int `json:"depth"`
 	User_id int `json:"user_id"`
 	Content string `json:"content"`
 	Slug string `json:"slug"`

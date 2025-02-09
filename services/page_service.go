@@ -19,7 +19,7 @@ func (pageService *PageService) Show (slug string, user_id int) (models.Page, er
 	return pageService.pageRepository.Show(slug, user_id)
 }
 
-func (pageService *PageService) Index (user_id int) (map[string]models.Page, error){
+func (pageService *PageService) Index (user_id int) ([]models.Page, error){
 	return pageService.pageRepository.Index(user_id)
 }
 
